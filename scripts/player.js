@@ -136,19 +136,21 @@ class Player {
 
     die() {
         //   this.fitness = this.fitness * this.fitness;
-        if (laden == true) {
+        if (this.dead != true) {
+            if (laden == true) {
 
-            const newBrain = p[0].nn.copy();
+                const newBrain = p[0].nn.copy();
 
-            p[0].nn.dispose();
+                p[0].nn.dispose();
 
-            p = [new Player(startPos.x, startPos.y, newBrain, p[0].species, 0)];
-            return;
+                p = [new Player(startPos.x, startPos.y, newBrain, p[0].species, 0)];
+                return;
+            }
+            this.dead = true;
+            if (!finished)
+                savedPlayers.push(p.splice(p.indexOf(this), 1)[0]);
+
         }
-        this.dead = true;
-        if (!finished)
-            savedPlayers.push(p.splice(p.indexOf(this), 1)[0]);
-
     }
 
     checkCollision() {
