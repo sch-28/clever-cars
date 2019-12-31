@@ -340,7 +340,7 @@ class Player {
                 this.index = route.indexOf(x);
             }
         }
-        if(heuristic(this.pos,ziel)-this.size/2 < 20 || counter - this.lastMovement > 125 || (counter >= counterLimit / 6 && this.index < 1)) {
+        if(heuristic(this.pos,ziel)-this.size/2 < 20 || counter - this.lastMovement > 125 || (counter >= counterLimit / 6 && this.index < 2)) {
             this.die();
         }
 
