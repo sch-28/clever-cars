@@ -76,6 +76,10 @@ function disableButton(button, x) {
     document.getElementById(button).disabled = x;
 }
 
+function write(id,text) {
+    document.getElementById(id).innerHTML = text;
+}
+
 //Berechnet die Distanz von a zu b
 function heuristic(a, b) {
     return Math.hypot(b.x - a.x, b.y - a.y)

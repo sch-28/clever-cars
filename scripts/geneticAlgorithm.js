@@ -1,9 +1,9 @@
 let sum;
 
 function nextGeneration() {
-    if (laden == false) {
+    if (stopGN == false) {
         p = [];
-
+        generation++;
 
         //highestFit = 0;
         //savedPlayers.forEach(a => highestFit += a.fitness);
@@ -27,6 +27,22 @@ function nextGeneration() {
 
         p[0] = new Player(startPos.x, startPos.y, champ.nn.copy(), champ.species, 0);
 
+        if(!bestSoFar || bestSoFar.fitness < champ.fitness*sum ) {
+            if(!bestSoFar) {
+                bestSoFar = new Player(startPos.x,startPos.y,champ.nn.copy(),champ.species,0);
+                bestSoFar.fitness = champ.fitness*sum;
+                bestSoFar.index = champ.index;
+                bestSoFar.gen = generation;
+            } else {
+                bestSoFar.nn.dispose();
+                bestSoFar = new Player(startPos.x,startPos.y,champ.nn.copy(),champ.species,0);
+                bestSoFar.fitness = champ.fitness*sum;
+                bestSoFar.index = champ.index;
+                bestSoFar.gen = generation;
+            }
+        }
+
+        write("stats",`Das beste Genom stammt aus der ${bestSoFar.gen}. Generation und hat die Strecke zu ${Math.round((bestSoFar.index/route.length)*100)}% abgeschlossen.`);
 
         for (let i = Math.floor(populationTotal * 0.90); i < populationTotal; i++) {
             const clone = champ;
@@ -43,18 +59,20 @@ function nextGeneration() {
             player.nn.dispose();
         }
         savedPlayers = [];
-        generation++;
         counter = 0;
         console.log(`Generation: ${Math.floor(generation)}||Fitness insgesamt: ${sum}, champ: ${champ.fitness}`);
         inputLabels.push("Gen: " + generation);
         inputData.push(sum);
         chart.update();
     } else {
-        p = [new Player(startPos.x, startPos.y, savedPlayers[0].nn.copy(), savedPlayers[0].species, 0)];
-        for (let player of savedPlayers) {
-            player.nn.dispose();
+        if(laden == true) {
+            counter = 0;
+            return;
         }
-        savedPlayers = [];
+        p = [bestSoFar];
+        laden = true;
+        counter = 0;
+        document.getElementById("showBest").innerHTML = "Genom weiterentwickeln";
     }
 }
 

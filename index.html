@@ -6,18 +6,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Machine learning</title>
+
+    <style>
+        #controls {
+            border: 2px solid black;
+            margin: 0 auto;
+            margin-top: 5px;
+            width: 1212px;
+            ;
+            padding-bottom: 10px;
+        }
+
+        #wrapper {
+            display: block;
+            text-align: center;
+            width: 100%;
+            height: 90%;
+        }
+
+        .button {
+            background-color: white;
+            border: 2px solid black;
+            color: black;
+            padding: 12px 25px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 15px;
+
+            transition-duration: 0.4s;
+        }
+
+        .button:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            padding-left: 0px;
+            margin-left: 0;
+            width: 100%;
+            height: 20px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.5;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: black;
+            opacity: 0.6;
+        }
+
+        .slider:hover {
+            opacity: 0.7;
+        }
+    </style>
+
 </head>
 
-<body oncontextmenu="return false;">
+<body oncontextmenu="return false;" style="font-family: Arial, Helvetica, sans-serif;">
 
-    <div style=" display: inline-block; border: 3px solid black">
-    <canvas id="canvas" width="800" height="800" style="background-color: white;  display: inline-block;"></canvas>
-</div>
-    <div style=" display: inline-block; border: 3px solid black">
-        <canvas id="chart" height="800" width="800" style="background-color: white; display: inline-block;"></canvas>
+    <div id="wrapper">
+        <div style=" display: inline-block; border: 3px solid black;">
+            <canvas id="canvas" width="600" height="600"
+                style="background-color: white;  display: inline-block;"></canvas>
+        </div>
+        <div style=" display: inline-block; border: 3px solid black">
+            <canvas id="chart" height="600" width="600"
+                style="background-color: white; display: inline-block;"></canvas>
+        </div>
+        <div id="controls">
+            <input type="range" min="1" max="100" value="1" class="slider" id="speedSlider">
+            <p id="stats">Das beste Genom stammt aus der 0. Generation und hat die Strecke zu 0% abgeschlossen.</p>
+            <button class="button" id="showBest" onclick="showBest()">Zeigen</button>
+        </div>
     </div>
-    <button onclick="speicher()">Speichern</button>
-    <button onclick="lade()">Laden</button>
+    <!--     <button onclick="speicher()">Speichern</button>
+    <button onclick="lade()">Laden</button> -->
+
 
 
 

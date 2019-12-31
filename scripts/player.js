@@ -4,6 +4,7 @@ class Player {
     static startAngle = 0;
 
     constructor(x, y, brain, species, id) {
+        this.gen;
         this.id = id;
 
         this.size = 20;
@@ -88,7 +89,6 @@ class Player {
             this.vectorDistance[4],
         );
 
-        //player.nn.predict(inputs, player);
         let output = this.nn.predict(inputs);
 
         let index = output.indexOf(Math.max(...output));
@@ -96,7 +96,7 @@ class Player {
             case 0:
                 this.pos.x += this.speed * Math.cos(this.angle)
                 this.pos.y += this.speed * Math.sin(this.angle)
-                this.lastMovement = counter; 
+                this.lastMovement = counter;
                 break;
             case 1:
                 this.angle -= this.rotSpeed;
@@ -126,25 +126,29 @@ class Player {
         let temp = this.checkCollision();
         if (temp == 1) {
             this.die();
-            return true;
+            return;
         } else if (temp == 2) {
-           /*  this.calcFitness();
-            this.dead = true;
-            if (!finished)
-                savedPlayers.push(p.splice(p.indexOf(this), 1)[0]); */
-            // console.log("Found it!");
-            //savedPlayers.push(p.splice(p.indexOf(this), 1)[0]);
+            this.index = route.length;
+            return;
         }
-
-
         this.look();
     }
 
     die() {
-     //   this.fitness = this.fitness * this.fitness;
+        //   this.fitness = this.fitness * this.fitness;
+        if (laden == true) {
+
+            const newBrain = p[0].nn.copy();
+
+            p[0].nn.dispose();
+
+            p = [new Player(startPos.x, startPos.y, newBrain, p[0].species, 0)];
+            return;
+        }
         this.dead = true;
         if (!finished)
             savedPlayers.push(p.splice(p.indexOf(this), 1)[0]);
+
     }
 
     checkCollision() {
@@ -329,6 +333,8 @@ class Player {
     calcFitness() {
 
 
+
+
         //DISTANZ ZUM ZIEL
         let d;
         let min = Infinity;
@@ -340,10 +346,25 @@ class Player {
                 this.index = route.indexOf(x);
             }
         }
-        if(heuristic(this.pos,ziel)-this.size/2 < 20 || counter - this.lastMovement > 125 || (counter >= counterLimit / 6 && this.index < 2)) {
+        if (laden != true && (counter - this.lastMovement > 125 || (counter >= counterLimit / 6 && this.index < 2))) {
             this.die();
+            return;
         }
+        if (heuristic(this.pos, ziel) - this.size / 2 < 20) {
+            this.index = route.length;
+            this.die();
+            let distance = 0;
 
+
+            distance = route.length - this.index;
+
+            distance = map(distance, 0, route.length, 1, 0);
+
+
+            //let zeit = map(counter, 0, counterLimit, 0.2, 0);
+            this.fitness = distance;
+            return;
+        }
 
 
 
@@ -357,7 +378,7 @@ class Player {
 
 
         //let zeit = map(counter, 0, counterLimit, 0.2, 0);
-        this.fitness = distance ;
+        this.fitness = distance;
 
     }
 }

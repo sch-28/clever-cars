@@ -8,6 +8,8 @@ let ziel;
 
 const populationTotal = 200;
 let p = [];
+
+let speedSlider = document.getElementById("speedSlider");
 let cycles = 1;
 
 let savedPlayers = [];
@@ -19,7 +21,6 @@ let counterLimit = 1200;
 let wandAnfang;
 
 let generation = 0;
-let highestFit = 0;
 let bestSoFar;
 
 let rand = canvas.getBoundingClientRect();
@@ -27,6 +28,8 @@ let mouseX;
 let mouseY;
 
 let finished = false;
+
+let stopGN = false;
 let laden = false;
 
 let startPos = new Vektor(canvas.width / 2, canvas.height - 15);
@@ -69,8 +72,8 @@ function update() {
 
         p.forEach(x => {
             x.think();
-            if (x.update() != true)
-                x.calcFitness();
+            x.update();
+            x.calcFitness();
         });
 
 
@@ -78,10 +81,14 @@ function update() {
 
         if (counter >= counterLimit) {
             while (p.length > 0) {
+                if (laden == true) {
+                    p[0].die();
+                    break;
+                }
                 p.forEach(x => {
-                    this.fitness = this.fitness * this.fitness;
-                    savedPlayers.push(p.splice(p.indexOf(x), 1)[0]);
+                    x.die();
                 });
+
             }
             nextGeneration();
             counter = 0;
@@ -145,7 +152,9 @@ function getOutput(out, player) {
     player.show();
 
 }
-
+speedSlider.oninput = () => {
+    cycles = speedSlider.value;
+}
 
 
 onmousedown = e => {
@@ -286,25 +295,6 @@ function drawWalls(amount) {
 async function lade() {
     laden = true;
     p = [];
-    /* const loadModel = await tf.loadLayersModel('localstorage://Champ');
-    switch (localStorage["champSpecies"]) {
-        case "0":
-            p = [new Player(canvas.width / 2, canvas.height - 15, new neuralNetwork(loadModel, 5, 10, 3),0,0)];
-            break;
-        case "1":
-            p = [new Player(canvas.width / 2, canvas.height - 15, new neuralNetwork(loadModel, 5, 20, 3),1,0)];
-            break;
-        case "2":
-            p = [new Player(canvas.width / 2, canvas.height - 15, new neuralNetwork(loadModel, 3, 10, 10, 3),2,0)];
-            break;
-        case "3":
-            p = [new Player(canvas.width / 2, canvas.height - 15, new neuralNetwork(loadModel, 5, 20, 10, 3),3,0)];
-            break;
-        case "4":
-            p = [new Player(canvas.width / 2, canvas.height - 15, new neuralNetwork(loadModel, 5, 20, 20, 3),4,0)];
-            break;
-
-    } */
     const loadModel = await tf.loadLayersModel('localstorage://Champ');
     const brain = JSON.parse(localStorage["champ1"]);
     const newBrain = new neuralNetwork(loadModel, brain.inputNodes, brain.hiddenNodes, brain.hiddenNodes2, brain.outputNodes);
@@ -318,3 +308,18 @@ async function speicher() {
     localStorage["champSpecies"] = p[0].species;
 }
 
+
+function showBest() {
+    if (laden == true) {
+        laden = false;
+        stopGN = false;
+        document.getElementById("showBest").innerHTML = "Zeigen";
+        bestSoFar.nn = p[0].nn.copy();
+        p[0].nn.dispose();
+        nextGeneration();
+
+    } else {
+        stopGN = true;
+        document.getElementById("showBest").innerHTML = "Warte...";
+    }
+}
