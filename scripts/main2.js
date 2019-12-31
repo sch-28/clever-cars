@@ -205,7 +205,7 @@ onmousemove = (e) => {
 
     if (draw) {
         drawCounter++;
-        if (drawCounter >= 7) {
+        if (drawCounter >= 15) {
             createWall();
             wandAnfang = new Vektor(lastPos.x, lastPos.y)
             drawCounter = 0;

@@ -11,20 +11,31 @@ function nextGeneration() {
 
 
 
-        for (let i = 1; i < Math.floor(populationTotal * 0.75); i++) {
+        for (let i = 1; i < Math.floor(populationTotal * 0.60); i++) {
             p[i] = pickPlayer(i);
         }
-        for (let i = Math.floor(populationTotal * 0.75); i < populationTotal; i++) {
+        for (let i = Math.floor(populationTotal * 0.60); i < Math.floor(populationTotal * 0.90); i++) {
             const clone = choosePlayer();
             const newBrain = clone.nn.copy();
             newBrain.mutate();
             p[i] = new Player(startPos.x, startPos.y, newBrain, clone.species, i);
         }
 
+
         savedPlayers.sort((a, b) => b.fitness - a.fitness);
         const champ = savedPlayers[0];
 
         p[0] = new Player(startPos.x, startPos.y, champ.nn.copy(), champ.species, 0);
+
+
+        for (let i = Math.floor(populationTotal * 0.90); i < populationTotal; i++) {
+            const clone = champ;
+            const newBrain = clone.nn.copy();
+            newBrain.mutate();
+            p[i] = new Player(startPos.x, startPos.y, newBrain, clone.species, i);
+        }
+
+
 
 
 
