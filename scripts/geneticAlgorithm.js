@@ -23,9 +23,11 @@ function nextGeneration() {
 
 
         savedPlayers.sort((a, b) => b.fitness - a.fitness);
-        const champ = savedPlayers[0];
 
-        p[0] = new Player(startPos.x, startPos.y, champ.nn.copy(), champ.species, 0);
+        const champ = savedPlayers[0];
+        p[0] = new Player(startPos.x, startPos.y, champ.nn.copy(), champ.species, champ.id);
+console.log(p[0].id);
+console.log(champ.fitness*sum);
 
         if(!bestSoFar || bestSoFar.fitness < champ.fitness*sum ) {
             if(!bestSoFar) {
@@ -62,7 +64,7 @@ function nextGeneration() {
         counter = 0;
         console.log(`Generation: ${Math.floor(generation)}||Fitness insgesamt: ${sum}, champ: ${champ.fitness}`);
         inputLabels.push("Gen: " + generation);
-        inputData.push(sum);
+        inputData.push(champ.fitness*sum);
         chart.update();
     } else {
         if(laden == true) {

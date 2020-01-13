@@ -144,6 +144,7 @@ class Player {
                 p[0].nn.dispose();
 
                 p = [new Player(startPos.x, startPos.y, newBrain, p[0].species, 0)];
+                nextGeneration();
                 return;
             }
             this.dead = true;

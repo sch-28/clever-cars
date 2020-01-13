@@ -136,10 +136,10 @@ class neuralNetwork {
                 for (let j = 0; j < values.length; j++) {
                     if (Math.random() < mutationChance) {
                         let w = values[j];
-                        if (Math.random() < 0.05) {
+                        if (Math.random() < 0.02) {
                             values[j] = randomGaussian();
                         } else {
-                            values[j] = w + randomGaussian();
+                            values[j] = w + randomGaussian()/2;
                         }
                     }
                 }
