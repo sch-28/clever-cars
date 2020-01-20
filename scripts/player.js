@@ -28,6 +28,8 @@ class Player {
 
         this.lastMovement;
 
+        this.time = Infinity;
+
         //VORNE, RECHTS, LINKS, UNTEN
         this.lookVectors = [0, -45 * Math.PI / 180, 45 * Math.PI / 180, -90 * Math.PI / 180, 90 * Math.PI / 180];
         this.vectorDistance = [0, 0, 0, 0, 0];
@@ -147,6 +149,7 @@ class Player {
                 nextGeneration();
                 return;
             }
+            this.time = counter;
             this.dead = true;
             if (!finished)
                 savedPlayers.push(p.splice(p.indexOf(this), 1)[0]);
@@ -366,6 +369,7 @@ class Player {
 
             //let zeit = map(counter, 0, counterLimit, 0.2, 0);
             this.fitness = distance;
+            this.time = counter;
             return;
         }
 

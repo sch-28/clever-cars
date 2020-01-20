@@ -25,9 +25,17 @@ var chart = new Chart(ctx2, {
     options: {
         title: {
             display: true,
-            text: "Fitness der einzelnen Generationen"
+            text: "Fitness des besten Genoms jeder Generationen"
         },
-        legend: { display: false }
+        legend: { display: false },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 1
+                }
+            }]
+        }
     }
 
 });

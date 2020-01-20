@@ -6,7 +6,7 @@ let updateInterval;
 
 let ziel;
 
-const populationTotal = 200;
+const populationTotal = 100;
 let p = [];
 
 let speedSlider = document.getElementById("speedSlider");
@@ -16,7 +16,7 @@ let savedPlayers = [];
 
 
 let counter = 0;
-let counterLimit = 1200;
+let counterLimit = 1300;
 
 let wandAnfang;
 
@@ -48,7 +48,7 @@ function start() {
 
     tf.setBackend("cpu");
     // drawWalls();
-    if (laden == false) {
+    if (laden == false && localStorage["New"] != "true") {
 
 
         for (let i = 0; i < populationTotal; i++) {
@@ -57,10 +57,13 @@ function start() {
         }
 
         //setInterval(update, 1);
-    } else {
+    } else if( laden == true && localStorage["New"] != "true"){
         p[0].pos.set(startPos.x, startPos.y);
         p[0].angle = Player.startAngle;
         p[0].show();
+    }else if(localStorage["New"] == "true") {
+        lade2();
+        return;
     }
     requestAnimationFrame(update);
 }
@@ -302,10 +305,30 @@ async function lade() {
     p = [new Player(0, 0, newBrain, species, 0)];
 }
 
+async function lade2(){
+    localStorage["New"] == "false";
+        for (let i = 0; i < populationTotal; i++) {
+            const loadModel = await tf.loadLayersModel('localstorage://Champ');
+            const brain = JSON.parse(localStorage["champ1"]);
+            const newBrain = new neuralNetwork(loadModel, brain.inputNodes, brain.hiddenNodes, brain.outputNodes);
+            const species = localStorage["champSpecies"];
+            p[i] = new Player(startPos.x, startPos.y, newBrain, species, 0);
+            p[i].show();
+        }
+        localStorage["New"] = null;
+        requestAnimationFrame(update);
+}
+
 async function speicher() {
     await p[0].nn.model.save("localstorage://Champ");
     localStorage["champ1"] = JSON.stringify(p[0].nn);
     localStorage["champSpecies"] = p[0].species;
+}
+
+function newLevel() {
+    speicher();
+    localStorage["New"] = "true";
+    location.reload();
 }
 
 

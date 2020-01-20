@@ -22,12 +22,19 @@ function nextGeneration() {
         }
 
 
-        savedPlayers.sort((a, b) => b.fitness - a.fitness);
+        savedPlayers.sort((a, b) => {
+            
+            if(b.fitness - a.fitness == 0){
+                return a.time - b.time;
+            }
+            else{
+                return b.fitness - a.fitness;
+            }
+        
+        });
 
         const champ = savedPlayers[0];
         p[0] = new Player(startPos.x, startPos.y, champ.nn.copy(), champ.species, champ.id);
-console.log(p[0].id);
-console.log(champ.fitness*sum);
 
         if(!bestSoFar || bestSoFar.fitness < champ.fitness*sum ) {
             if(!bestSoFar) {
